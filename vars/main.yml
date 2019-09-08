@@ -1,0 +1,3 @@
+---
+virtualenv_top_dir: "/sb/virtualenv"
+virtualenv_name: "azure"

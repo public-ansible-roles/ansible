@@ -1,0 +1,44 @@
+---
+- name: "ansible | install prerequisite packages"
+  yum:
+    name: 
+      - epel-release
+      - python-devel
+      - openssl-devel
+      - gcc
+      - python-pip
+    state: present
+
+- name: "ansible | install virtualenv"
+  pip:
+    name: virtualenv
+
+- name: "ansible | create a directory for virtualenv"
+  file:
+    path: "{{ virtualenv_top_dir }}"
+    state: directory
+    recurse: yes
+
+- name: "ansible | check if target virtualenv has already existed"
+  stat:
+    path: "{{ virtualenv_top_dir }}/{{ virtualenv_name }}"
+  register: file_check
+
+- name: "ansible | create a virtualenv file for azure"
+  shell: "virtualenv {{ virtualenv_top_dir }}/{{ virtualenv_name }}"
+  when: not file_check.stat.exists
+
+- name: "ansible | upgrade pip"
+  shell: "source {{ virtualenv_top_dir }}/{{ virtualenv_name }}/bin/activate && pip install --upgrade pip"
+  register: result
+  changed_when: '"Requirement already up-to-date" not in result.stdout'
+
+- name: "ansible | install ansible"
+  pip:
+    name: ansible
+    virtualenv: "{{ virtualenv_top_dir }}/{{ virtualenv_name }}"
+
+- name: "ansible | install ansible module for azure"
+  pip:
+    name: "ansible[azure]"
+    virtualenv: "{{ virtualenv_top_dir }}/{{ virtualenv_name }}"
