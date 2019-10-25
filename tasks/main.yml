@@ -42,3 +42,8 @@
   pip:
     name: "ansible[azure]"
     virtualenv: "{{ virtualenv_top_dir }}/{{ virtualenv_name }}"
+
+- name: "ansible | install ansible-lint"
+  pip:
+    name: "ansible-lint"
+    virtualenv: "{{ virtualenv_top_dir }}/{{ virtualenv_name }}"
