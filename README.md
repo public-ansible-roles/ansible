@@ -23,7 +23,7 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - ansible
+         - { role: ansible }
 
 License
 -------
